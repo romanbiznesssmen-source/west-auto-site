@@ -103,7 +103,20 @@ export default function Footer() {
 
       <div className={styles.bottom}>
         <span>© {new Date().getFullYear()} West Auto Shipping. Усі права захищені.</span>
-        <a href="/polityka-konfidentsiynosti">Політика конфіденційності</a>
+        <div className={styles.bottomMeta}>
+          <a href="/polityka-konfidentsiynosti">Політика конфіденційності</a>
+          <span className={styles.devCredit}>
+            Сайт розроблено{' '}
+            <a
+              href="https://telebots.site/uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.dev}
+            >
+              TeleBots
+            </a>
+          </span>
+        </div>
       </div>
     </footer>
   )
