@@ -821,6 +821,11 @@
   max-width: 62ch;
 }
 
+.militaryCard :global(.section-lead strong) {
+  font-weight: 700;
+  color: #fff;
+}
+
 .militaryText {
   margin: 0;
   max-width: 72ch;

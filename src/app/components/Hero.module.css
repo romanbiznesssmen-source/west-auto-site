@@ -26,6 +26,10 @@
 
 .bgDesktop {
   display: block;
+  height: 118% !important;
+  top: -9% !important;
+  bottom: auto !important;
+  object-position: center center;
 }
 
 .overlay {

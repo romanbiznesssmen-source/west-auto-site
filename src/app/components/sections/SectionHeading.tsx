@@ -1,6 +1,6 @@
 type SectionHeadingProps = {
   title: React.ReactNode
-  lead?: string
+  lead?: React.ReactNode
 }
 
 export function SectionHeading({ title, lead }: SectionHeadingProps) {
