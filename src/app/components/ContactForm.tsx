@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { SERVICES } from '../brand'
+import { formatUaPhone, isCompleteUaPhone } from '../lib/phone'
 import { getStoredUtm } from '../lib/utm'
 import styles from './ContactSection.module.css'
 
@@ -16,6 +17,7 @@ type ContactFormProps = {
 export default function ContactForm({ idPrefix = '', onSuccess, className }: ContactFormProps) {
   const [form, setForm] = useState<FormState>({ name: '', phone: '', service: '', comment: '', consent: false })
   const [status, setStatus] = useState<Status>('idle')
+  const [phoneError, setPhoneError] = useState(false)
 
   const id = (name: string) => (idPrefix ? `${idPrefix}-${name}` : name)
 
@@ -24,9 +26,21 @@ export default function ContactForm({ idPrefix = '', onSuccess, className }: Con
     setForm(f => ({ ...f, [k]: val }))
   }
 
+  const onPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatUaPhone(e.target.value)
+    setForm(f => ({ ...f, phone: formatted }))
+    if (phoneError && isCompleteUaPhone(formatted)) setPhoneError(false)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.consent) return
+
+    if (!isCompleteUaPhone(form.phone)) {
+      setPhoneError(true)
+      return
+    }
+
     setStatus('loading')
 
     try {
@@ -90,7 +104,20 @@ export default function ContactForm({ idPrefix = '', onSuccess, className }: Con
         </div>
         <div className={styles.field}>
           <label htmlFor={id('phone')}>Телефон</label>
-          <input id={id('phone')} type="tel" placeholder="+380" value={form.phone} onChange={set('phone')} required />
+          <input
+            id={id('phone')}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="+38 (0__) ___ __ __"
+            value={form.phone}
+            onChange={onPhoneChange}
+            aria-invalid={phoneError}
+            required
+          />
+          {phoneError && (
+            <p className={styles.fieldError}>Введіть повний номер у форматі +38 (0XX) XXX XX XX</p>
+          )}
         </div>
       </div>
       <div className={styles.field}>

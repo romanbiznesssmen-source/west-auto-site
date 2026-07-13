@@ -207,6 +207,18 @@
   background: #fff;
 }
 
+.field input[aria-invalid='true'] {
+  border-color: var(--primary-red);
+}
+
+.fieldError {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--primary-red);
+  line-height: 1.4;
+}
+
 .selectWrap {
   position: relative;
 }
