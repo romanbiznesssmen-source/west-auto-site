@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import './globals.css'
 import './west-auto.css'
+import UtmCapture from './components/UtmCapture'
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_TITLE,
@@ -116,6 +117,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="#main-content" className="skip-link">
           Перейти до основного вмісту
         </a>
+        <UtmCapture />
         <div className="west-auto">{children}</div>
       </body>
     </html>

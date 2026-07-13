@@ -1,10 +1,22 @@
 import { NextResponse } from 'next/server'
 
+const UTM_KEYS = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+] as const
+
+type UtmKey = (typeof UTM_KEYS)[number]
+type UtmParams = Partial<Record<UtmKey, string>>
+
 type ContactPayload = {
   name?: string
   phone?: string
   service?: string
   comment?: string
+  utm?: UtmParams
 }
 
 function getEnv(name: string) {
@@ -20,6 +32,15 @@ function escapeHtml(value: string) {
     .replace(/>/g, '&gt;')
 }
 
+function normalizeUtm(utm: UtmParams | undefined): Record<UtmKey, string> {
+  const result = {} as Record<UtmKey, string>
+  for (const key of UTM_KEYS) {
+    const value = utm?.[key]?.trim()
+    result[key] = value || '—'
+  }
+  return result
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as ContactPayload
@@ -27,6 +48,7 @@ export async function POST(request: Request) {
     const phone = body.phone?.trim()
     const service = body.service?.trim() || 'Не вказано'
     const comment = body.comment?.trim() || '—'
+    const utm = normalizeUtm(body.utm)
 
     if (!name || !phone) {
       return NextResponse.json(
@@ -60,6 +82,13 @@ export async function POST(request: Request) {
       `<b>Телефон:</b> ${escapeHtml(phone)}`,
       `<b>Послуга:</b> ${escapeHtml(service)}`,
       `<b>Коментар:</b> ${escapeHtml(comment)}`,
+      '',
+      '<b>UTM:</b>',
+      `utm_source=${escapeHtml(utm.utm_source)}`,
+      `utm_medium=${escapeHtml(utm.utm_medium)}`,
+      `utm_campaign=${escapeHtml(utm.utm_campaign)}`,
+      `utm_content=${escapeHtml(utm.utm_content)}`,
+      `utm_term=${escapeHtml(utm.utm_term)}`,
     ].join('\n')
 
     const telegramResponse = await fetch(

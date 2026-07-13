@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { SERVICES } from '../brand'
+import { getStoredUtm } from '../lib/utm'
 import styles from './ContactSection.module.css'
 
 type FormState = { name: string; phone: string; service: string; comment: string; consent: boolean }
@@ -29,6 +30,7 @@ export default function ContactForm({ idPrefix = '', onSuccess, className }: Con
     setStatus('loading')
 
     try {
+      const utm = getStoredUtm()
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,6 +39,7 @@ export default function ContactForm({ idPrefix = '', onSuccess, className }: Con
           phone: form.phone,
           service: form.service,
           comment: form.comment,
+          utm,
         }),
       })
 
